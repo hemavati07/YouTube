@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Clone (Responsive Design)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg-primary: #0f0f0f;
+      --bg-secondary: #1a1a1a;
+      --bg-hover: #272727;
+      --bg-chip: #333;
+      --bg-chip-active: #f1f1f1;
+      --text-primary: #f1f1f1;
+      --text-secondary: #aaa;
+      --text-chip-active: #0f0f0f;
+      --accent: #ff4444;
+      --header-height: 56px;
+      --sidebar-width: 220px;
+      --border-color: #333;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-full: 50%;
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { display: block; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ===== HEADER ===== */
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--header-height);
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+    }
+    header nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 100%; padding: 0 16px; gap: 16px;
+    }
+    .header-left {
+      display: flex; align-items: center; gap: 12px; min-width: 130px;
+    }
+    .menu-btn {
+      background: none; border: none; color: var(--text-primary);
+      font-size: 20px; padding: 8px; border-radius: var(--radius-full);
+      transition: background 0.2s;
+    }
+    .menu-btn:hover { background: var(--bg-hover); }
+    .logo {
+      font-size: 18px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .logo-icon { color: var(--accent); font-size: 22px; }
+
+    .header-center { flex: 1; max-width: 600px; }
+    .search-form { display: flex; align-items: center; }
+    .search-form input {
+      flex: 1; height: 40px; padding: 0 16px;
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      border-right: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      color: var(--text-primary); font-size: 14px; font-family: inherit; outline: none;
+    }
+    .search-form input:focus { border-color: #555; }
+    .search-form input::placeholder { color: var(--text-secondary); }
+    .search-btn {
+      height: 40px; width: 56px; background: var(--bg-hover);
+      border: 1px solid var(--border-color);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      color: var(--text-primary); font-size: 16px;
+    }
+    .search-btn:hover { background: #444; }
+
+    .header-right {
+      display: flex; align-items: center; gap: 8px; min-width: 80px; justify-content: flex-end;
+    }
+    .icon-btn {
+      background: none; border: none; color: var(--text-primary);
+      font-size: 18px; width: 40px; height: 40px; border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .icon-btn:hover { background: var(--bg-hover); }
+    .upload-btn {
+      background: var(--bg-hover); border: none; color: var(--text-primary);
+      padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px;
+      font-weight: 500; font-family: inherit;
+      display: flex; align-items: center; gap: 6px; transition: background 0.2s;
+    }
+    .upload-btn:hover { background: #444; }
+    .upload-text { display: inline; }
+
+    /* ===== LAYOUT ===== */
+    .layout { display: flex; margin-top: var(--header-height); }
+
+    /* ===== SIDEBAR ===== */
+    aside {
+      width: var(--sidebar-width); height: calc(100vh - var(--header-height));
+      position: sticky; top: var(--header-height); overflow-y: auto;
+      padding: 12px 0; flex-shrink: 0; border-right: 1px solid var(--border-color);
+    }
+    aside::-webkit-scrollbar { width: 6px; }
+    aside::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+    aside li a {
+      display: flex; align-items: center; gap: 16px; padding: 8px 20px;
+      font-size: 14px; border-radius: var(--radius-sm); margin: 0 8px; transition: background 0.2s;
+    }
+    aside li a:hover { background: var(--bg-hover); }
+    aside li a .sidebar-icon { font-size: 18px; width: 24px; text-align: center; }
+    .sidebar-divider { border: none; border-top: 1px solid var(--border-color); margin: 12px 20px; }
+    .sidebar-heading {
+      padding: 8px 20px 4px; font-size: 13px; font-weight: 500;
+      color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ===== MAIN ===== */
+    main { flex: 1; padding: 16px 24px 40px; min-width: 0; }
+
+    /* ===== CHIPS ===== */
+    .chips {
+      display: flex; gap: 8px; padding-bottom: 20px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      background: var(--bg-chip); border: none; color: var(--text-primary);
+      padding: 6px 14px; border-radius: var(--radius-sm); font-size: 13px;
+      font-weight: 500; font-family: inherit; white-space: nowrap; transition: background 0.2s, color 0.2s;
+    }
+    .chip:hover { background: #444; }
+    .chip.active { background: var(--bg-chip-active); color: var(--text-chip-active); }
+
+    /* ===== VIDEO GRID ===== */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 40px 16px;
+    }
+
+    /* ===== VIDEO CARD ===== */
+    .video-card { display: flex; flex-direction: column; gap: 10px; }
+    .thumbnail {
+      position: relative; display: block; border-radius: var(--radius-md);
+      overflow: hidden; aspect-ratio: 16 / 9;
+    }
+    .thumbnail img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;
+    }
+    .video-card:hover .thumbnail img { transform: scale(1.05); }
+    .duration {
+      position: absolute; bottom: 6px; right: 6px;
+      background: rgba(0,0,0,.8); color: #fff; padding: 2px 6px;
+      border-radius: 4px; font-size: 12px; font-weight: 500;
+    }
+    .video-info { display: flex; gap: 12px; }
+    .channel-avatar {
+      width: 36px; height: 36px; border-radius: var(--radius-full);
+      flex-shrink: 0; object-fit: cover;
+    }
+    .video-meta { flex: 1; min-width: 0; }
+    .video-title {
+      font-size: 14px; font-weight: 500; line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; margin-bottom: 4px;
+    }
+    .video-title a:hover { color: #fff; }
+    .channel-name { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; }
+    .channel-name:hover { color: var(--text-primary); }
+    .video-stats { font-size: 13px; color: var(--text-secondary); }
+
+
+    /* ===========================================
+       RESPONSIVE BREAKPOINTS — THIS IS THE NEW PART
+       =========================================== */
+
+    /* ---------- TABLET: ≤ 1024px ---------- */
+    @media (max-width: 1024px) {
+      /* Collapse sidebar completely */
+      aside {
+        display: none;
+      }
+
+      /* Give main content more room */
+      main {
+        padding: 16px 16px 40px;
+      }
+
+      /* Smaller minimum card width so 2 columns fit */
+      .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 32px 12px;
+      }
+    }
+
+    /* ---------- MOBILE: ≤ 640px ---------- */
+    @media (max-width: 640px) {
+      /* Shrink header padding */
+      header nav {
+        padding: 0 8px;
+        gap: 8px;
+      }
+
+      /* Hide logo text on very small screens */
+      .logo span:not(.logo-icon) {
+        display: none;
+      }
+
+      .header-left {
+        min-width: auto;
+      }
+
+      /* Make search bar fill available space */
+      .search-form input {
+        min-width: 0;
+        font-size: 13px;
+        padding: 0 10px;
+      }
+
+      /* Hide upload text, keep icon */
+      .upload-text {
+        display: none;
+      }
+      .upload-btn {
+        padding: 8px 10px;
+      }
+
+      /* Single column video grid */
+      .video-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      /* Full-bleed thumbnails on mobile */
+      main {
+        padding: 12px 0 40px;
+      }
+
+      .chips {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .thumbnail {
+        border-radius: 0;
+      }
+
+      .video-info {
+        padding: 0 12px;
+      }
+
+      /* Slightly larger tap targets on mobile */
+      .chip {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    }
+
+    /* ---------- VERY SMALL: ≤ 400px ---------- */
+    @media (max-width: 400px) {
+      /* Hide notification bell */
+      .icon-btn.notif-btn {
+        display: none;
+      }
+
+      .header-right {
+        min-width: auto;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <nav>
+      <div class="header-left">
+        <button class="menu-btn" aria-label="Toggle menu">☰</button>
+        <a href="/" class="logo">
+          <span class="logo-icon">▶</span>
+          <span>MyTube</span>
+        </a>
+      </div>
+      <div class="header-center">
+        <form class="search-form" action="#" role="search">
+          <input type="search" placeholder="Search videos..." aria-label="Search videos">
+          <button class="search-btn" type="submit" aria-label="Search">🔍</button>
+        </form>
+      </div>
+      <div class="header-right">
+        <button class="upload-btn" aria-label="Upload video">📤 <span class="upload-text">Upload</span></button>
+        <button class="icon-btn notif-btn" aria-label="Notifications">🔔</button>
+        <button class="icon-btn" aria-label="User profile">👤</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== LAYOUT ========== -->
+  <div class="layout">
+    <aside>
+      <nav>
+        <ul>
+          <li><a href="#"><span class="sidebar-icon">🏠</span> Home</a></li>
+          <li><a href="#"><span class="sidebar-icon">🔥</span> Trending</a></li>
+          <li><a href="#"><span class="sidebar-icon">📺</span> Subscriptions</a></li>
+          <li><a href="#"><span class="sidebar-icon">📚</span> Library</a></li>
+        </ul>
+        <hr class="sidebar-divider">
+        <h3 class="sidebar-heading">Subscriptions</h3>
+        <ul>
+          <li><a href="#"><span class="sidebar-icon">🎵</span> Music Channel</a></li>
+          <li><a href="#"><span class="sidebar-icon">💻</span> Tech Channel</a></li>
+          <li><a href="#"><span class="sidebar-icon">🎮</span> Gaming Channel</a></li>
+          <li><a href="#"><span class="sidebar-icon">📖</span> Education Channel</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="chips" aria-label="Category filters">
+        <button class="chip active">All</button>
+        <button class="chip">Music</button>
+        <button class="chip">Gaming</button>
+        <button class="chip">Programming</button>
+        <button class="chip">News</button>
+        <button class="chip">Sports</button>
+        <button class="chip">Comedy</button>
+        <button class="chip">Education</button>
+      </section>
+
+      <section class="video-grid" aria-label="Video results">
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid1/320/180" alt="Learn HTML in 10 Minutes"><span class="duration">10:25</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch1/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">Learn HTML in 10 Minutes</a></h3><p class="channel-name">CodeMaster</p><p class="video-stats">1.2M views · 3 days ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid2/320/180" alt="CSS Grid Complete Guide"><span class="duration">22:14</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch2/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">CSS Grid Complete Guide</a></h3><p class="channel-name">DesignPro</p><p class="video-stats">850K views · 1 week ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid3/320/180" alt="JavaScript for Beginners"><span class="duration">45:30</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch3/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">JavaScript for Beginners - Full Course</a></h3><p class="channel-name">JSNinja</p><p class="video-stats">2.5M views · 2 months ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid4/320/180" alt="React Crash Course"><span class="duration">1:12:45</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch4/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">React Crash Course 2025</a></h3><p class="channel-name">ReactGuru</p><p class="video-stats">500K views · 5 days ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid5/320/180" alt="System Design Interview Tips"><span class="duration">35:20</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch5/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">System Design Interview Tips</a></h3><p class="channel-name">DesignDojo</p><p class="video-stats">3.1M views · 1 month ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid6/320/180" alt="Python Data Science"><span class="duration">28:55</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch6/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">Python Data Science Tutorial</a></h3><p class="channel-name">DataWiz</p><p class="video-stats">720K views · 2 weeks ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid7/320/180" alt="Node.js REST API"><span class="duration">52:10</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch7/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">Build a REST API with Node.js</a></h3><p class="channel-name">BackendBoss</p><p class="video-stats">1.8M views · 3 weeks ago</p></div></div>
+        </article>
+        <article class="video-card">
+          <a class="thumbnail" href="#"><img src="https://picsum.photos/seed/vid8/320/180" alt="Git & GitHub Tutorial"><span class="duration">18:40</span></a>
+          <div class="video-info"><img class="channel-avatar" src="https://picsum.photos/seed/ch8/40/40" alt=""><div class="video-meta"><h3 class="video-title"><a href="#">Git & GitHub for Absolute Beginners</a></h3><p class="channel-name">DevTools</p><p class="video-stats">950K views · 4 days ago</p></div></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>
