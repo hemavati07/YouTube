@@ -7,7 +7,7 @@ The project recreates the layout of a modern video streaming platform, including
 
 ## 🚀 Live Demo
 
-🔗 **https://hmyoutube.netlify.app/**
+🔗 **https://hemavati07.github.io/YouTube/**
 
 ---
 
@@ -39,5 +39,3 @@ The project recreates the layout of a modern video streaming platform, including
 ## 🎯 Purpose
 
 This project was created to practice **front-end web development** and understand how video streaming platforms structure their user interface and layout.
-
----
